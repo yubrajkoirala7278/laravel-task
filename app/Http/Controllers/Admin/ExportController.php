@@ -23,6 +23,24 @@ class ExportController extends Controller
     {
         try {
             if ($request->hasFile('json-file') && $request->file('json-file')->isValid()) {
+                $extension = $request->file('json-file')->getClientOriginalExtension();
+
+                // check if the file format is json or not
+                if ($extension !== 'json') {
+                    return response()->json(['error' => 'Invalid file format. Please upload a JSON file.']);
+                }
+                // =====if you want to validate eack key value then remove comment====
+                // $jsonData = json_decode(file_get_contents($request->file('json-file')->path()), true);
+
+                // // Validate each key
+                // foreach ($jsonData as $key => $value) {
+                //     if (!isset($value['name']) || strlen($value['name']) > 255) {
+                //         return response()->json(['error' => 'Invalid data: name is required and should be maximum 255 characters.']);
+                //     }
+                //     // You can add similar validations for other keys like email, phone, address here
+                // }
+                // ================================
+
                 $csvFilePath = $this->exportService->convertToCSV($request);
 
                 return response()->json(['csv_file' => $csvFilePath]);
@@ -33,6 +51,8 @@ class ExportController extends Controller
             return back()->with('error', $th->getMessage());
         }
     }
+
+
 
     public function downloadCsv(Request $request)
     {

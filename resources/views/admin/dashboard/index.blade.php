@@ -28,12 +28,19 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        var downloadLink = document.createElement('a');
-                        downloadLink.href = '/admin/download-csv?csv_file=' + response.csv_file;
-                        downloadLink.download = 'file.csv';
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
+                        if (response.error) {
+                            toastify().error(response.error);
+                        } else {
+                            toastify().success("CSV file created successfully!");
+                            var downloadLink = document.createElement('a');
+                            downloadLink.href = '/admin/download-csv?csv_file=' + response
+                                .csv_file;
+                            downloadLink.download = 'file.csv';
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                            $('#json-file').val('');
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
