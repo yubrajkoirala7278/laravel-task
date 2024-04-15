@@ -19,7 +19,7 @@ class AuthController extends Controller
             $user = Socialite::driver('github')->user();
             return redirect()->route('admin.dashboard')->with('success', 'Logged in!');
         } catch (\Exception $e) {
-            return redirect()->route('frontend.error')->with('error', 'Authentication failed.');
+            return redirect()->route('frontend.index')->with('error', 'Authentication failed.');
         }
     }
 }
